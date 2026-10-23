@@ -1,0 +1,81 @@
+# Builds the desktop installers for Windows, macOS and Linux.
+# Push a tag like v2.1.0 to publish them on a GitHub Release; any run uploads them as artifacts.
+name: desktop-installers
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-22.04]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Linux webview runtime
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgirepository1.0-dev libcairo2-dev gir1.2-webkit2-4.1 python3-gi
+          pip install "pywebview[gtk]"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements-desktop.txt pytest httpx
+          pytest -q
+
+      - name: Build app
+        run: pyinstaller packaging/PharmaTnT.spec --noconfirm
+
+      - name: Windows installer
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          choco install innosetup -y --no-progress
+          $env:APP_VERSION = "${{ github.ref_name }}".TrimStart("v")
+          if ($env:APP_VERSION -notmatch '^\d') { $env:APP_VERSION = "2.1.0" }
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" packaging\windows-installer.iss
+          # Optional code signing (removes SmartScreen warnings): set WINDOWS_CERT_PFX / WINDOWS_CERT_PASSWORD secrets
+          # signtool sign /f cert.pfx /p $env:WINDOWS_CERT_PASSWORD /tr http://timestamp.digicert.com /td sha256 /fd sha256 dist\PharmaTnT-Setup-*.exe
+
+      - name: macOS disk image
+        if: runner.os == 'macOS'
+        run: |
+          # Optional: codesign + notarize with an Apple Developer ID to avoid Gatekeeper warnings
+          hdiutil create -volname "Pharma Track & Trace" -srcfolder dist/PharmaTnT.app -ov -format UDZO dist/PharmaTnT-macOS.dmg
+
+      - name: Linux archive
+        if: runner.os == 'Linux'
+        run: |
+          cp packaging/pharma-tnt.desktop packaging/install-linux.sh dist/
+          tar -C dist -czf dist/PharmaTnT-linux-x64.tar.gz PharmaTnT pharma-tnt.desktop install-linux.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installer-${{ runner.os }}
+          path: |
+            dist/PharmaTnT-Setup-*.exe
+            dist/PharmaTnT-macOS.dmg
+            dist/PharmaTnT-linux-x64.tar.gz
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: installers
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: installers/*

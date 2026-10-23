@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Pharma Track & Trace
+Comment=Serialization and supply-chain traceability
+Exec=/opt/pharma-tnt/PharmaTnT
+Terminal=false
+Categories=Office;

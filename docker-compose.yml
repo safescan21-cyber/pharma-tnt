@@ -1,0 +1,28 @@
+services:
+  tnt:
+    build: .
+    restart: unless-stopped
+    environment:
+      TNT_COMPANY_NAME: "Acme Pharma Track & Trace"
+      TNT_ADMIN_USER: admin
+      TNT_ADMIN_PASSWORD: ${TNT_ADMIN_PASSWORD:?set TNT_ADMIN_PASSWORD in .env}
+      TNT_IDLE_MINUTES: "30"
+    volumes:
+      - tnt-data:/data
+    expose: ["8000"]
+
+  # TLS reverse proxy. Set DOMAIN in .env; Caddy obtains certificates automatically.
+  proxy:
+    image: caddy:2.8.4
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+    depends_on: [tnt]
+
+volumes:
+  tnt-data:
+  caddy-data:

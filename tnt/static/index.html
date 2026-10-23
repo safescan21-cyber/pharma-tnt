@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{COMPANY}}</title>
+<link rel="icon" href="/favicon.ico" type="image/svg+xml">
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<div id="login" class="center hidden">
+  <form id="loginForm" class="card narrow">
+    <h1 class="brand">{{COMPANY}}</h1>
+    <p class="muted">Serialization &amp; Track and Trace</p>
+    <label>Username<input name="username" autocomplete="username" required></label>
+    <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+    <button>Sign in</button>
+    <p id="loginMsg" class="error"></p>
+  </form>
+  <form id="setupForm" class="card narrow hidden">
+    <h1 class="brand">Welcome</h1>
+    <p class="muted">Create the first administrator account for this installation.</p>
+    <label>Username<input name="username" required minlength="2" autocomplete="username"></label>
+    <label>Full name<input name="full_name" required></label>
+    <label>Password (10+ characters, letters and digits)<input name="password" type="password" required minlength="10" autocomplete="new-password"></label>
+    <label>Repeat password<input name="password2" type="password" required minlength="10" autocomplete="new-password"></label>
+    <button>Create administrator</button>
+    <p id="setupMsg" class="error"></p>
+  </form>
+</div>
+
+<div id="app" class="hidden">
+  <header>
+    <button id="menuBtn" class="icon" aria-label="Menu">&#9776;</button>
+    <span class="brand">{{COMPANY}}</span>
+    <span class="spacer"></span>
+    <span id="who" class="muted"></span>
+    <button class="ghost small" id="pwBtn">Password</button>
+    <button class="ghost small" id="logoutBtn">Sign out</button>
+  </header>
+  <nav id="nav"></nav>
+  <main id="view"></main>
+</div>
+
+<dialog id="dlg"><form method="dialog" id="dlgForm"></form></dialog>
+<div id="toast" class="toast hidden"></div>
+<script src="/static/app.js"></script>
+</body>
+</html>

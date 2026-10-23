@@ -1,0 +1,40 @@
+:root { --bg:#f4f6f8; --card:#fff; --ink:#18202a; --muted:#5d6876; --line:#dce1e7; --accent:#0b6bcb; --accent-ink:#fff;
+  --ok:#1b7f3b; --warn:#a15c00; --bad:#c3292e; --chip:#eef2f6; }
+@media (prefers-color-scheme: dark) { :root { --bg:#0f1318; --card:#171c23; --ink:#e4e8ee; --muted:#97a2b0; --line:#2a313b;
+  --accent:#5aa2ff; --accent-ink:#06101d; --ok:#4cc475; --warn:#f0a43a; --bad:#ff6b6f; --chip:#222a34; } }
+* { box-sizing:border-box } html,body { margin:0 } body { background:var(--bg); color:var(--ink); font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif }
+.hidden { display:none !important } .muted { color:var(--muted) } .error { color:var(--bad); min-height:1.2em }
+.center { min-height:100vh; display:grid; place-items:center; padding:16px } .narrow { width:min(380px,100%) }
+.brand { font-weight:700; font-size:16px; margin:0 } h1.brand { font-size:22px }
+#app { display:grid; grid-template-columns:220px 1fr; grid-template-rows:auto 1fr; min-height:100vh }
+header { grid-column:1/-1; display:flex; align-items:center; gap:10px; padding:10px 16px; background:var(--card); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:5 }
+.spacer { flex:1 } nav { background:var(--card); border-right:1px solid var(--line); padding:12px 8px }
+nav a { display:block; padding:8px 12px; border-radius:8px; color:var(--ink); text-decoration:none; margin-bottom:2px }
+nav a.active { background:var(--chip); font-weight:600 } nav a:hover { background:var(--chip) }
+main { padding:20px; min-width:0 } h2 { margin:0 0 14px; font-size:20px } h3 { margin:0 0 10px; font-size:15px }
+.card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:16px; min-width:0 }
+.grid { display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)) }
+label { display:block; font-weight:600; font-size:13px; margin:0 0 10px } label input, label select, label textarea { margin-top:4px }
+input, select, textarea { width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--ink); font:inherit }
+textarea { font-family:ui-monospace,Menlo,monospace; font-size:12px; min-height:110px }
+button { padding:9px 16px; border:0; border-radius:8px; background:var(--accent); color:var(--accent-ink); font:inherit; font-weight:600; cursor:pointer }
+button:disabled { opacity:.5; cursor:progress } button.ghost { background:transparent; color:var(--accent); border:1px solid var(--line) }
+button.small { padding:5px 10px; font-size:12px } button.danger { background:var(--bad); color:#fff } button.icon { display:none; background:transparent; color:var(--ink); font-size:20px; padding:2px 8px }
+.row { display:flex; gap:8px; flex-wrap:wrap; align-items:end } .row > label { flex:1; min-width:150px }
+.tiles { display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)) }
+.tile { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px } .tile b { display:block; font-size:24px } .tile span { color:var(--muted); font-size:12px; text-transform:capitalize }
+.table { overflow-x:auto } table { width:100%; min-width:640px; border-collapse:collapse; font-size:13px } th { text-align:left; color:var(--muted); font-weight:600; font-size:12px }
+td, th { padding:7px 8px; border-bottom:1px solid var(--line); vertical-align:top } code, .mono { font-family:ui-monospace,Menlo,monospace; font-size:12px; overflow-wrap:anywhere }
+.badge { display:inline-block; padding:1px 9px; border-radius:99px; font-size:12px; font-weight:700; background:var(--chip) }
+.b-ok { background:var(--ok); color:#fff } .b-bad { background:var(--bad); color:#fff } .b-warn { background:var(--warn); color:#fff }
+.tabs { display:flex; gap:4px; margin-bottom:12px; flex-wrap:wrap } .tabs button { background:var(--chip); color:var(--ink) } .tabs button.on { background:var(--accent); color:var(--accent-ink) }
+.result { margin-top:12px } .toast { position:fixed; right:16px; bottom:16px; max-width:min(420px,calc(100vw - 32px)); padding:12px 16px; border-radius:10px; background:var(--ink); color:var(--bg); z-index:50 }
+.toast.err { background:var(--bad); color:#fff }
+dialog { border:1px solid var(--line); border-radius:12px; background:var(--card); color:var(--ink); width:min(440px,calc(100vw - 32px)); padding:20px }
+dialog::backdrop { background:rgba(0,0,0,.45) }
+@media (max-width: 760px) { #app { grid-template-columns:1fr } nav { display:none; position:fixed; top:52px; left:0; bottom:0; width:240px; z-index:10; box-shadow:0 8px 24px rgba(0,0,0,.25) }
+  nav.open { display:block } button.icon { display:inline-block } #who { display:none } main { padding:16px } }
+.scan-input { font-size:20px; padding:14px; margin:6px 0 12px; font-family:ui-monospace,Menlo,monospace }
+.flash { border-radius:12px; padding:22px; margin-bottom:12px; background:var(--chip); text-align:center; font-size:15px; color:var(--muted) }
+.flash b { display:block; font-size:30px; letter-spacing:.04em } .flash span { display:block; margin-top:4px }
+.flash.ok { background:var(--ok); color:#fff } .flash.bad { background:var(--bad); color:#fff }
